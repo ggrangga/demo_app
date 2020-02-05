@@ -9,7 +9,7 @@ class ImageList extends StatelessWidget {
     return ListView.builder(
       itemCount: images.length,
       itemBuilder: (context, int index){
-        if(images != null && images.length > 0){
+        if(images[index].poster != null && images[index].poster.length > 3){
           return Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),

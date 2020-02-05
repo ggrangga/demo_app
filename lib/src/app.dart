@@ -16,13 +16,32 @@ class AppState extends State<App> {
   List<ImageModel> images = [];
   bool typing = false;
 
-  void fetchImageSearch(String str) async{
-    var response = await get(url+str);
-    List<ImageModel> myModels = (json.decode(response.body)['Search'] as List).map((i) => ImageModel.fromJson(i)).toList();
-
-    setState(() {
-      images = myModels;
-    });
+  void fetchImageSearch(String str) async {
+    str = Uri.parse(url+str).toString();
+    //str = str.toString().replaceAll('\'', "%27");
+    //print("url =>"+str);
+    //str = str.toString().replaceAll(" ", "%20");
+    print("url =>" + str);
+    var response = await get(str);
+    var rs = json.decode(response.body);
+    //print(rs['Search']);
+    if (rs['Response'] == "True") {
+      List<ImageModel> myModels = [];
+      if (rs['Search'] != null) {
+        //print("true");
+        myModels =
+            (rs['Search'] as List).map((i) => ImageModel.fromJson(i)).toList();
+      } else {
+        //print("false");
+        myModels[0] = ImageModel.fromJson(rs);
+      }
+      print("myModels => " + myModels.length.toString());
+      if (mounted) {
+        setState(() {
+          images = myModels;
+        });
+      }
+    }
   }
 
   void initState() {
@@ -31,18 +50,22 @@ class AppState extends State<App> {
   }
 
   Widget build(context) {
-    return  MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: ImageList(images),
-        /*floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: fetchImageSearch,
-        ),*/
         appBar: AppBar(
           centerTitle: true,
-          title: typing ? SearchBox() : Text('omdbapi.com'),
+          title: typing
+              ? SearchBox(
+                  onSearchTappedCallback: (String movieName) {
+                    fetchImageSearch(movieName);
+                  },
+                )
+              : Text('omdbapi.com'),
           leading: IconButton(
-            icon: Icon(typing ? Icons.done : Icons.menu,),
+            icon: Icon(
+              typing ? Icons.done : Icons.menu,
+            ),
             onPressed: () {
               setState(() {
                 typing = !typing;
@@ -54,10 +77,20 @@ class AppState extends State<App> {
     );
   }
 }
+
+typedef OnSearchTappedCallback = Function(String);
+
 class SearchBox extends StatelessWidget {
-  TextEditingController searchOnlyByTitleController = new TextEditingController();
-  TextEditingController searchByTitleController = new TextEditingController();
-  TextEditingController searchByYearController = new TextEditingController();
+  final OnSearchTappedCallback onSearchTappedCallback;
+  final TextEditingController searchOnlyByTitleController =
+      new TextEditingController();
+  final TextEditingController searchByTitleController =
+      new TextEditingController();
+  final TextEditingController searchByYearController =
+      new TextEditingController();
+
+  SearchBox({this.onSearchTappedCallback});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,7 +102,7 @@ class SearchBox extends StatelessWidget {
             child: TextField(
               controller: searchOnlyByTitleController,
               decoration: InputDecoration(
-                hintText: "Search by Title...",
+                hintText: "Search by Title for 2019...",
               ),
             ),
           ),
@@ -80,11 +113,10 @@ class SearchBox extends StatelessWidget {
             ),
             onPressed: () {
               String str = searchOnlyByTitleController.text;
-              if(str.length > 0){
-                //fetchImageSearch("&s=$str");
+              if (str.length > 0) {
+                onSearchTappedCallback("&s=$str&y=2019");
                 searchOnlyByTitleController.text = "";
-                print("Search on front! &s=$str");
-              }              
+              }
             },
           ),
           IconButton(
@@ -93,60 +125,62 @@ class SearchBox extends StatelessWidget {
               color: Colors.black,
             ),
             onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: Form(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: searchByTitleController,
-                              decoration: InputDecoration(
-                                hintText: "Search by Title...",
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Form(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: searchByTitleController,
+                                decoration: InputDecoration(
+                                  hintText: "Search by Title...",
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: searchByYearController,
-                              decoration: InputDecoration(
-                                hintText: "Search by Year...",
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: searchByYearController,
+                                decoration: InputDecoration(
+                                  hintText: "Search by Year...",
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: RaisedButton(
-                              child: Text("Submit"),
-                              onPressed: () {
-                                String strTitle = searchByTitleController.text;
-                                String strYear = searchByYearController.text;
-                                String r = "";
-                                if(strTitle.length > 0){
-                                  r += "&s=$strTitle";
-                                  searchByTitleController.text = "";
-                                }
-                                if(strYear.length > 0){
-                                  r += "&s=$strYear";
-                                  searchByYearController.text = "";
-                                }
-                                
-                                //fetchImageSearch(r);
-                                print("Search on front! $r");
-                                Navigator.pop(context);
-                              },
-                            ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: RaisedButton(
+                                child: Text("Submit"),
+                                onPressed: () {
+                                  String strTitle =
+                                      searchByTitleController.text;
+                                  String strYear = searchByYearController.text;
+                                  String r = "";
+                                  if (strTitle.length > 0) {
+                                    r += "&s=$strTitle";
+                                    searchByTitleController.text = "";
+                                  }
+                                  if (strYear.length > 0) {
+                                    r += "&y=$strYear";
+                                    searchByYearController.text = "";
+                                  }
+
+                                  if (r.length > 0) {
+                                    onSearchTappedCallback(r);
+                                    Navigator.pop(context);
+                                  }
+                                },
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                });
+                    );
+                  });
             },
           ),
         ],
