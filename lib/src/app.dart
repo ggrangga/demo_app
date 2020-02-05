@@ -15,29 +15,31 @@ class AppState extends State<App> {
   final url = "http://www.omdbapi.com/?apikey=c4545306";
   List<ImageModel> images = [];
 
-  void fetchImageSearch() async{
-    String str = "&s=dark&y=2019";
+  void fetchImageSearch(String str) async{
     var response = await get(url+str);
     List<ImageModel> myModels = (json.decode(response.body)['Search'] as List).map((i) => ImageModel.fromJson(i)).toList();
 
-    print("search");
-    //print(myModels.toString());
-    print(json.decode(response.body));
     setState(() {
       images = myModels;
     });
+  }
+
+  void initState() {
+    super.initState();
+    fetchImageSearch("&s=dark&y=2019");
   }
 
   Widget build(context) {
     return  MaterialApp(
       home: Scaffold(
         body: ImageList(images),
-        floatingActionButton: FloatingActionButton(
+        /*floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: fetchImageSearch,
-        ),
+        ),*/
         appBar: AppBar(
-          title: Text('omdbapi'),
+          centerTitle: true,
+          title: Text('omdbapi.com'),
         ),
       ),
     );

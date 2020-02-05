@@ -10,8 +10,6 @@ class ImageList extends StatelessWidget {
       itemCount: images.length,
       itemBuilder: (context, int index){
         if(images != null && images.length > 0){
-          print("true");
-          print(images[index].toJson());
           return Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
