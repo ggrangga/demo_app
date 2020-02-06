@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'screens/login_screen.dart';
 import 'package:http/http.dart' show get;
 import 'models/image_model.dart';
 import 'dart:convert';
 import 'widget/image_list.dart';
 
-class App extends StatefulWidget {
+/*class App extends StatefulWidget {
   createState() {
     return AppState();
   }
@@ -24,15 +25,11 @@ class AppState extends State<App> {
     print("url =>" + str);
     var response = await get(str);
     var rs = json.decode(response.body);
-    //print(rs['Search']);
     if (rs['Response'] == "True") {
       List<ImageModel> myModels = [];
       if (rs['Search'] != null) {
-        //print("true");
-        myModels =
-            (rs['Search'] as List).map((i) => ImageModel.fromJson(i)).toList();
+        myModels = (rs['Search'] as List).map((i) => ImageModel.fromJson(i)).toList();
       } else {
-        //print("false");
         myModels[0] = ImageModel.fromJson(rs);
       }
       print("myModels => " + myModels.length.toString());
@@ -112,7 +109,6 @@ class SearchBoxState extends State<SearchBoxPage> {
         children: [
           Expanded(
             child: TextField(
-              //controller: searchOnlyByTitleController,
               decoration: InputDecoration(
                 hintText: "Search by Title for 2019...",
               ),
@@ -167,19 +163,18 @@ class SearchBoxState extends State<SearchBoxPage> {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: DropdownButton<String>(
-                               // controller: searchByYearController,
-                               value: dropdownYearValue,
-                                items: <String>['2017', '2018', '2019', '2020'].map((String value) {
-                                  return new DropdownMenuItem<String>(
-                                    value: value,
-                                    child: new Text(value),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  print("dropdownYearValue " + value);
-                                  setState(() => dropdownYearValue = value);
-                                },
-                              ),
+                              value: dropdownYearValue,
+                              items: <String>['2017', '2018', '2019', '2020'].map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: new Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                print("dropdownYearValue " + value);
+                                setState(() => dropdownYearValue = value);
+                              },
+                            ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -214,6 +209,17 @@ class SearchBoxState extends State<SearchBoxPage> {
           ),
         ],
       ),
+    );
+  }
+}*/
+
+class App extends StatelessWidget {
+  Widget build(context) {
+    return MaterialApp(
+      title: 'Log Me In!',
+      home: Scaffold(
+        body: LoginScreen(),
+      )
     );
   }
 }
