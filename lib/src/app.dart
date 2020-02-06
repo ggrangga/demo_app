@@ -56,9 +56,12 @@ class AppState extends State<App> {
         appBar: AppBar(
           centerTitle: true,
           title: typing
-              ? SearchBox(
+              ? SearchBoxPage(
                   onSearchTappedCallback: (String movieName) {
                     fetchImageSearch(movieName);
+                    setState(() {
+                      typing = !typing;
+                    });
                   },
                 )
               : Text('omdbapi.com'),
@@ -77,11 +80,7 @@ class AppState extends State<App> {
             icon: Icon(
               Icons.menu,
             ),
-            onPressed: () {
-              /*setState(() {
-                typing = !typing;
-              });*/
-            },
+            onPressed: () {},
           ),
         ),
       ),
@@ -89,18 +88,20 @@ class AppState extends State<App> {
   }
 }
 
-typedef OnSearchTappedCallback = Function(String);
-
-class SearchBox extends StatelessWidget {
+class SearchBoxPage extends StatefulWidget{
   final OnSearchTappedCallback onSearchTappedCallback;
-  final TextEditingController searchOnlyByTitleController =
-      new TextEditingController();
-  final TextEditingController searchByTitleController =
-      new TextEditingController();
-  final TextEditingController searchByYearController =
-      new TextEditingController();
 
-  SearchBox({this.onSearchTappedCallback});
+  SearchBoxPage({this.onSearchTappedCallback});
+
+  @override
+  SearchBoxState createState()=> SearchBoxState();
+}
+
+typedef OnSearchTappedCallback = Function(String);
+class SearchBoxState extends State<SearchBoxPage> {
+  String textfieldOnlyTitleValue = "";
+  String textfieldTitleValue = "";
+  String dropdownYearValue = "2020";
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +112,15 @@ class SearchBox extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
-              controller: searchOnlyByTitleController,
+              //controller: searchOnlyByTitleController,
               decoration: InputDecoration(
                 hintText: "Search by Title for 2019...",
               ),
+              onChanged: (value) {
+                setState(() {
+                  textfieldOnlyTitleValue = value; 
+                });
+              },
             ),
           ),
           IconButton(
@@ -123,10 +129,11 @@ class SearchBox extends StatelessWidget {
               color: Colors.black,
             ),
             onPressed: () {
-              String str = searchOnlyByTitleController.text;
-              if (str.length > 0) {
-                onSearchTappedCallback("&s=$str&y=2019");
-                searchOnlyByTitleController.text = "";
+              if (textfieldOnlyTitleValue.length > 0) {
+                widget.onSearchTappedCallback("&s=$textfieldOnlyTitleValue&y=2019");
+                setState(() {
+                  textfieldOnlyTitleValue = "";
+                });
               }
             },
           ),
@@ -147,7 +154,11 @@ class SearchBox extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: TextField(
-                                controller: searchByTitleController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    textfieldTitleValue = value;
+                                  });
+                                },
                                 decoration: InputDecoration(
                                   hintText: "Search by Title...",
                                 ),
@@ -155,11 +166,19 @@ class SearchBox extends StatelessWidget {
                             ),
                             Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: searchByYearController,
-                                decoration: InputDecoration(
-                                  hintText: "Search by Year...",
-                                ),
+                              child: DropdownButton<String>(
+                               // controller: searchByYearController,
+                               value: dropdownYearValue,
+                                items: <String>['2017', '2018', '2019', '2020'].map((String value) {
+                                  return new DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  print("dropdownYearValue " + value);
+                                  setState(() => dropdownYearValue = value);
+                                },
                               ),
                             ),
                             Padding(
@@ -167,21 +186,20 @@ class SearchBox extends StatelessWidget {
                               child: RaisedButton(
                                 child: Text("Submit"),
                                 onPressed: () {
-                                  String strTitle =
-                                      searchByTitleController.text;
-                                  String strYear = searchByYearController.text;
                                   String r = "";
-                                  if (strTitle.length > 0) {
-                                    r += "&s=$strTitle";
-                                    searchByTitleController.text = "";
-                                  }
-                                  if (strYear.length > 0) {
-                                    r += "&y=$strYear";
-                                    searchByYearController.text = "";
-                                  }
+                                  if (textfieldTitleValue.length > 0) 
+                                    r += "&s=$textfieldTitleValue";
+                                  
+                                  if (dropdownYearValue.length > 0) 
+                                    r += "&y=$dropdownYearValue";
+                                  
 
                                   if (r.length > 0) {
-                                    onSearchTappedCallback(r);
+                                    widget.onSearchTappedCallback(r);
+                                    setState(() {
+                                      textfieldTitleValue = "";
+                                      dropdownYearValue = "2020";
+                                    });
                                     Navigator.pop(context);
                                   }
                                 },

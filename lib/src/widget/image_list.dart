@@ -25,7 +25,19 @@ class ImageList extends StatelessWidget {
                     fontSize: 24, 
                     fontWeight: FontWeight.bold
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                 ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton(
+                    tooltip: 'Add',
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      print(images[index].title + " pressed");
+                    },
+                  ),
+                ),                
               ],
             ),
           ); 
