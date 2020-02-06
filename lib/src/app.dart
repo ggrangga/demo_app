@@ -62,14 +62,25 @@ class AppState extends State<App> {
                   },
                 )
               : Text('omdbapi.com'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(typing ? Icons.done : Icons.search),
+              tooltip: 'Search',
+              onPressed: () {
+                setState(() {
+                  typing = !typing;
+                });
+              },
+            ),
+          ],
           leading: IconButton(
             icon: Icon(
-              typing ? Icons.done : Icons.menu,
+              Icons.menu,
             ),
             onPressed: () {
-              setState(() {
+              /*setState(() {
                 typing = !typing;
-              });
+              });*/
             },
           ),
         ),

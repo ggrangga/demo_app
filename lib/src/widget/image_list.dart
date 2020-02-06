@@ -19,7 +19,13 @@ class ImageList extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Image.network(images[index].poster),
-                Text(images[index].title),
+                Text(
+                  images[index].title + " (" + images[index].year + ")",
+                  style: TextStyle(
+                    fontSize: 24, 
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
               ],
             ),
           ); 
