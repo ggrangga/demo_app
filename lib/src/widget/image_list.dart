@@ -9,14 +9,19 @@ class ImageList extends StatelessWidget {
     return ListView.builder(
       itemCount: images.length,
       itemBuilder: (context, int index){
-        if(images != null && images.length > 0){
+        if(images[index].poster != null && images[index].poster.length > 3){
           return Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
             ),
             padding: EdgeInsets.all(20.0),
             margin: EdgeInsets.all(20.0),
-            child: Image.network(images[index].poster),
+            child: Column(
+              children: <Widget>[
+                Image.network(images[index].poster),
+                Text(images[index].title),
+              ],
+            ),
           ); 
         }
       }
