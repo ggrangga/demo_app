@@ -57,8 +57,11 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
       onPressed: () async{
         if(formKey.currentState.validate()){
           formKey.currentState.save();
-          var url = Enums.omdbapiDummy + "$token";
-          var response = await get(url);
+          Uri uri = Uri.http(Enums.omdbapi, '/', {
+            'apikey': token,
+            's': 'The Day After Tomorrow'
+          });
+          var response = await get(uri);
           var rs = json.decode(response.body);
           if (rs['Response'] == "True") {
             Navigator.of(context).pushNamed(Routes.dashboard,

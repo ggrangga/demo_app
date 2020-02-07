@@ -21,7 +21,7 @@ class AppState extends State<SearchScreen> {
   void fetchImageSearch(String str) async {
     var map = new Map<String, dynamic>();
     str.substring(1).split("&").toList().forEach((value) => map[value.split("=")[0]] = value.split("=")[1]); 
-    Uri uri = Uri.http('www.omdbapi.com', '/', {
+    Uri uri = Uri.http(Enums.omdbapi, '/', {
       'apikey': Enums.omdbapiKey,
       ...map
     });
