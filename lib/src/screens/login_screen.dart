@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
 import 'dart:convert';
 import '../mixins/validation_mixin.dart';
+import '../enum.dart';
 
 class LoginScreen extends StatefulWidget {
   createState(){
@@ -50,7 +51,7 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
       onPressed: () async{
         if(formKey.currentState.validate()){
           formKey.currentState.save();
-          var url = "http://www.omdbapi.com/?s=The%20Day%20After%20Tomorrow&apikey=$token";
+          var url = Enums.omdbapiDummy + "$token";
           var response = await get(url);
           var rs = json.decode(response.body);
           if (rs['Response'] == "True") {
