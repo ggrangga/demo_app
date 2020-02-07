@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
 import 'dart:convert';
-import '../mixins/validation_mixin.dart';
-import '../enum.dart';
+import '../../mixins/validation_mixin.dart';
+import '../../enum.dart';
+import '../../routes.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key key}) : super(key: key);
   createState(){
     return LoginScreenState();
   }
@@ -13,20 +15,24 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> with ValidationMixin {
   final formKey = GlobalKey<FormState>();
   String token;
+
+  @override
   Widget build(context) {
-    return Container(
-      margin: EdgeInsets.all(20.0),
-      child: Form(
-        key: formKey,
-        child: Column(
-          children: [
-            Container(margin: EdgeInsets.only(top:250.0)),
-            loginFIeld(),
-            Container(margin: EdgeInsets.only(bottom: 25.0)),
-            submitButton(),
-          ],
+    return new Scaffold(
+      body: Container(
+        margin: EdgeInsets.all(20.0),
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              Container(margin: EdgeInsets.only(top:250.0)),
+              loginFIeld(),
+              Container(margin: EdgeInsets.only(bottom: 25.0)),
+              submitButton(),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 
@@ -55,7 +61,8 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
           var response = await get(url);
           var rs = json.decode(response.body);
           if (rs['Response'] == "True") {
-            print("rs => "+ rs.toString());
+            Navigator.of(context).pushNamed(Routes.dashboard,
+                arguments: 'Go to => Dashboard');
           }
         }        
       },

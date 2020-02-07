@@ -5,13 +5,14 @@ import 'dart:convert';
 import '../widget/image_list.dart';
 import '../enum.dart';
 
-class App extends StatefulWidget {
+class SearchScreen extends StatefulWidget {
+  SearchScreen({Key key}) : super(key: key);
   createState() {
     return AppState();
   }
 }
 
-class AppState extends State<App> {
+class AppState extends State<SearchScreen> {
   int counter = 0;
   final url = Enums.omdbapi + "apikey=" + Enums.omdbapiKey;
   List<ImageModel> images = [];
@@ -47,7 +48,7 @@ class AppState extends State<App> {
   }
 
   Widget build(context) {
-    return MaterialApp(
+    /*return MaterialApp(
       home: Scaffold(
         body: ImageList(images),
         appBar: AppBar(
@@ -82,6 +83,19 @@ class AppState extends State<App> {
         ),
       ),
     );
+  }*/
+  return new Container(
+      child: Column(
+        children: <Widget>[
+          SearchBoxPage(
+            onSearchTappedCallback: (String movieName) {
+              fetchImageSearch(movieName);
+            },
+          ),
+          ImageList(images),
+        ],
+      ),
+    );
   }
 }
 
@@ -104,12 +118,13 @@ class SearchBoxState extends State<SearchBoxPage> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
+      margin: EdgeInsets.all(20.0),
       color: Colors.white,
       child: Row(
         children: [
           Expanded(
-            child: TextField(
-              decoration: InputDecoration(
+            child: new TextField(
+                decoration: InputDecoration(
                 hintText: "Search by Title for 2019...",
               ),
               onChanged: (value) {
@@ -117,7 +132,7 @@ class SearchBoxState extends State<SearchBoxPage> {
                   textfieldOnlyTitleValue = value; 
                 });
               },
-            ),
+            )
           ),
           IconButton(
             icon: Icon(
