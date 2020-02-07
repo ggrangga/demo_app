@@ -19,12 +19,14 @@ class AppState extends State<SearchScreen> {
   bool typing = false;
 
   void fetchImageSearch(String str) async {
-    str = Uri.parse(url+str).toString();
-    //str = str.toString().replaceAll('\'', "%27");
-    //print("url =>"+str);
-    //str = str.toString().replaceAll(" ", "%20");
-    print("url =>" + str);
-    var response = await get(str);
+    var map = new Map<String, dynamic>();
+    str.substring(1).split("&").toList().forEach((value) => map[value.split("=")[0]] = value.split("=")[1]); 
+    Uri uri = Uri.http('www.omdbapi.com', '/', {
+      'apikey': Enums.omdbapiKey,
+      ...map
+    });
+    print("url =>" + uri.toString());
+    var response = await get(uri);
     var rs = json.decode(response.body);
     if (rs['Response'] == "True") {
       List<ImageModel> myModels = [];

@@ -17,6 +17,7 @@ abstract class Router {
   ///   settings/profile/edit/?title=Matrix&year=2010
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    print("settings => " + settings.toString());
     final List<String> pathElements = settings.name.split('/');
     if (pathElements[0] != '') {
       return null;

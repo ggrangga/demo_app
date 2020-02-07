@@ -9,8 +9,6 @@ class ImageList extends StatelessWidget {
     return new Expanded (
       child: ListView.builder(
         itemCount: images.length,
-        //scrollDirection: Axis.vertical,
-        //shrinkWrap : true,
         itemBuilder: (context, int index){
           if(images[index].poster != null && images[index].poster.length > 3){
             return Container(
