@@ -4,6 +4,9 @@ import '../models/image_model.dart';
 import 'dart:convert';
 import '../widget/image_list.dart';
 import '../enum.dart';
+import '../blocs/bloc.dart';
+import '../blocs/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key key}) : super(key: key);
@@ -14,15 +17,17 @@ class SearchScreen extends StatefulWidget {
 
 class AppState extends State<SearchScreen> {
   int counter = 0;
-  final url = Enums.omdbapi + "apikey=" + Enums.omdbapiKey;
   List<ImageModel> images = [];
   bool typing = false;
 
   void fetchImageSearch(String str) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
     var map = new Map<String, dynamic>();
     str.substring(1).split("&").toList().forEach((value) => map[value.split("=")[0]] = value.split("=")[1]); 
     Uri uri = Uri.http(Enums.omdbapi, '/', {
-      'apikey': Enums.omdbapiKey,
+      'apikey': token,
       ...map
     });
     print("url =>" + uri.toString());
@@ -48,6 +53,15 @@ class AppState extends State<SearchScreen> {
     super.initState();
     fetchImageSearch("&s=dark&y=2019");
   }
+
+  /*String Function() getDataFromSharedPref() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    setState(() {
+      token = token;
+    });
+    return token;
+  }*/
 
   Widget build(context) {
     return new Container(

@@ -84,14 +84,18 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
           child: Text('Submit!'),
           onPressed: snapshot.hasData ? () async {
             isValid = await bloc.submitLogin();
-            //bloc.token.listen((value) {print("value =>| " + value);});
-            setState(() {
-              isValid = isValid;
-            });
-            if(isValid){             
+           
+            if(isValid){
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              bloc.token.listen((value) {
+                prefs.setString('token', value);
+              });
+                        
               Navigator.of(context).pushNamed(Routes.dashboard,
                     arguments: 'Go to => Dashboard');
-            }
+            }else
+               setState(() {isValid = isValid;});
+            
           } : null,
         );
       },
