@@ -50,43 +50,7 @@ class AppState extends State<SearchScreen> {
   }
 
   Widget build(context) {
-    /*return MaterialApp(
-      home: Scaffold(
-        body: ImageList(images),
-        appBar: AppBar(
-          centerTitle: true,
-          title: typing
-              ? SearchBoxPage(
-                  onSearchTappedCallback: (String movieName) {
-                    fetchImageSearch(movieName);
-                    setState(() {
-                      typing = !typing;
-                    });
-                  },
-                )
-              : Text('omdbapi.com'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(typing ? Icons.done : Icons.search),
-              tooltip: 'Search',
-              onPressed: () {
-                setState(() {
-                  typing = !typing;
-                });
-              },
-            ),
-          ],
-          leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-            ),
-            onPressed: () {},
-          ),
-        ),
-      ),
-    );
-  }*/
-  return new Container(
+    return new Container(
       child: Column(
         children: <Widget>[
           SearchBoxPage(

@@ -21,9 +21,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedPageIndex;
-  final String title;
-
-  _HomePageState({@required this.title});
 
   @override
   void initState() {
@@ -36,6 +33,13 @@ class _HomePageState extends State<HomePage> {
     SearchScreen(),
     //FavoriteVideoListPage(),
     //SettingPage(),
+  ];
+
+  final List<String> titles = [
+    "Dashboard",
+    "Search",
+    "Favorite",
+    "Settings",
   ];
 
   void _onItemSelected(int index) {
@@ -76,7 +80,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('omdbapi.com'),
+        title: Text(titles[_selectedPageIndex]),
       ),
       body: _pages[_selectedPageIndex],
       drawer: HomeDrawer(callback: _onItemSelected),
