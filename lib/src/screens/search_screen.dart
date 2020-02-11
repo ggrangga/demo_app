@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
-import '../models/image_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../models/image_model.dart';
 import '../widget/image_list.dart';
 import '../enum.dart';
 
@@ -14,15 +15,17 @@ class SearchScreen extends StatefulWidget {
 
 class AppState extends State<SearchScreen> {
   int counter = 0;
-  final url = Enums.omdbapi + "apikey=" + Enums.omdbapiKey;
   List<ImageModel> images = [];
   bool typing = false;
 
   void fetchImageSearch(String str) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
     var map = new Map<String, dynamic>();
     str.substring(1).split("&").toList().forEach((value) => map[value.split("=")[0]] = value.split("=")[1]); 
     Uri uri = Uri.http(Enums.omdbapi, '/', {
-      'apikey': Enums.omdbapiKey,
+      'apikey': token,
       ...map
     });
     print("url =>" + uri.toString());
@@ -49,44 +52,17 @@ class AppState extends State<SearchScreen> {
     fetchImageSearch("&s=dark&y=2019");
   }
 
-  Widget build(context) {
-    /*return MaterialApp(
-      home: Scaffold(
-        body: ImageList(images),
-        appBar: AppBar(
-          centerTitle: true,
-          title: typing
-              ? SearchBoxPage(
-                  onSearchTappedCallback: (String movieName) {
-                    fetchImageSearch(movieName);
-                    setState(() {
-                      typing = !typing;
-                    });
-                  },
-                )
-              : Text('omdbapi.com'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(typing ? Icons.done : Icons.search),
-              tooltip: 'Search',
-              onPressed: () {
-                setState(() {
-                  typing = !typing;
-                });
-              },
-            ),
-          ],
-          leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-            ),
-            onPressed: () {},
-          ),
-        ),
-      ),
-    );
+  /*String Function() getDataFromSharedPref() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    setState(() {
+      token = token;
+    });
+    return token;
   }*/
-  return new Container(
+
+  Widget build(context) {
+    return new Container(
       child: Column(
         children: <Widget>[
           SearchBoxPage(
@@ -112,9 +88,9 @@ class SearchBoxPage extends StatefulWidget{
 
 typedef OnSearchTappedCallback = Function(String);
 class SearchBoxState extends State<SearchBoxPage> {
-  String textfieldOnlyTitleValue = "";
-  String textfieldTitleValue = "";
-  String dropdownYearValue = "2020";
+  String textfieldOnlyTitleValue = '';
+  String textfieldTitleValue = '';
+  String dropdownYearValue = '2020';
 
   @override
   Widget build(BuildContext context) {
@@ -180,18 +156,18 @@ class SearchBoxState extends State<SearchBoxPage> {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: DropdownButton<String>(
-                              value: dropdownYearValue,
-                              items: <String>['2017', '2018', '2019', '2020'].map((String value) {
-                                return new DropdownMenuItem<String>(
-                                  value: value,
-                                  child: new Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                print("dropdownYearValue " + value);
-                                setState(() => dropdownYearValue = value);
-                              },
-                            ),
+                                value: dropdownYearValue,
+                                items: <String>['2017', '2018', '2019', '2020'].map((String value) {
+                                  return new DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  print("dropdownYearValue " + value);
+                                  setState(() => (dropdownYearValue = value));
+                                },
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -210,7 +186,6 @@ class SearchBoxState extends State<SearchBoxPage> {
                                     widget.onSearchTappedCallback(r);
                                     setState(() {
                                       textfieldTitleValue = "";
-                                      dropdownYearValue = "2020";
                                     });
                                     Navigator.pop(context);
                                   }
