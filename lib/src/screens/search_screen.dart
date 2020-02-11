@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
-import '../models/image_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../models/image_model.dart';
 import '../widget/image_list.dart';
 import '../enum.dart';
-import '../blocs/bloc.dart';
-import '../blocs/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key key}) : super(key: key);
@@ -90,9 +88,9 @@ class SearchBoxPage extends StatefulWidget{
 
 typedef OnSearchTappedCallback = Function(String);
 class SearchBoxState extends State<SearchBoxPage> {
-  String textfieldOnlyTitleValue = "";
-  String textfieldTitleValue = "";
-  String dropdownYearValue = "2020";
+  String textfieldOnlyTitleValue = '';
+  String textfieldTitleValue = '';
+  String dropdownYearValue = '2020';
 
   @override
   Widget build(BuildContext context) {
@@ -158,18 +156,18 @@ class SearchBoxState extends State<SearchBoxPage> {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: DropdownButton<String>(
-                              value: dropdownYearValue,
-                              items: <String>['2017', '2018', '2019', '2020'].map((String value) {
-                                return new DropdownMenuItem<String>(
-                                  value: value,
-                                  child: new Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                print("dropdownYearValue " + value);
-                                setState(() => dropdownYearValue = value);
-                              },
-                            ),
+                                value: dropdownYearValue,
+                                items: <String>['2017', '2018', '2019', '2020'].map((String value) {
+                                  return new DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  print("dropdownYearValue " + value);
+                                  setState(() => (dropdownYearValue = value));
+                                },
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -188,7 +186,6 @@ class SearchBoxState extends State<SearchBoxPage> {
                                     widget.onSearchTappedCallback(r);
                                     setState(() {
                                       textfieldTitleValue = "";
-                                      dropdownYearValue = "2020";
                                     });
                                     Navigator.pop(context);
                                   }

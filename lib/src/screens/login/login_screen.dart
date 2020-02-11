@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' show get;
-import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../mixins/validation_mixin.dart';
-import '../../enum.dart';
 import '../../routes.dart';
 import '../../blocs/bloc.dart';
 import '../../blocs/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key key}) : super(key: key);
@@ -17,14 +14,6 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> with ValidationMixin {
   bool isValid = true;
-  /*@override
-  initState() {
-    super.initState();
-
-    bloc.loginSuccess.listen((loginResult) {
-
-    });
-  }*/
 
   @override
   Widget build(context) {
