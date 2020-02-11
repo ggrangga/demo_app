@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../dashboard/dashboard_page.dart';
 import '../home/widgets/drawer/home_drawer.dart';
 import '../search_screen.dart';
+import '../favorite_screen.dart';
 
 enum HomePageOptions {
   dashboard,
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     DashboardPage(),
     SearchScreen(),
-    //FavoriteVideoListPage(),
+    FavoriteScreen(),
     //SettingPage(),
   ];
 

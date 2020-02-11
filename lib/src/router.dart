@@ -5,13 +5,15 @@ import 'screens/dashboard/dashboard_page.dart';
 import 'screens/login/login_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/not_found_page.dart';
+import 'screens/favorite_screen.dart';
 
 abstract class Router {
   static Map<String, WidgetBuilder> routes = {
     Routes.home: (BuildContext context) => HomePage(),
     Routes.dashboard: (BuildContext context) => HomePage(page: HomePageOptions.dashboard,),
     Routes.login: (BuildContext context) => LoginScreen(),
-    Routes.search: (BuildContext context) => SearchScreen(),  
+    Routes.search: (BuildContext context) => SearchScreen(),
+    Routes.favoriteList: (BuildContext context) => FavoriteScreen(),  
   };
 
   ///   settings/profile/edit/?title=Matrix&year=2010
