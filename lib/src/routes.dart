@@ -12,6 +12,8 @@ abstract class Routes {
   static const String settings = '$home/$settingsPath';
   static const String favoriteDetailsPath = 'favoriteDetails';
   static const String favoriteDetails = '/$favoriteDetailsPath';
+  static const String movieDetailPath = 'movieDetail';
+  static const String movieDetail = '$home/$movieDetailPath';
   static const String notFoundPath = 'notFound';
   static const String notFound = '/$notFoundPath';
 }

@@ -6,6 +6,8 @@ import 'screens/login/login_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/not_found_page.dart';
 import 'screens/favorite_screen.dart';
+import 'screens/setting_screen.dart';
+import 'screens/movieDetail_screen.dart';
 
 abstract class Router {
   static Map<String, WidgetBuilder> routes = {
@@ -14,6 +16,8 @@ abstract class Router {
     Routes.login: (BuildContext context) => LoginScreen(),
     Routes.search: (BuildContext context) => SearchScreen(),
     Routes.favoriteList: (BuildContext context) => FavoriteScreen(),  
+    Routes.settings: (BuildContext context) => SettingScreen(),
+    Routes.movieDetail: (BuildContext context) => MovieDetailScreen(),  
   };
 
   ///   settings/profile/edit/?title=Matrix&year=2010

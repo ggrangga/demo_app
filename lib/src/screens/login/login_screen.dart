@@ -70,7 +70,7 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
       stream: bloc.submitValid,
       builder: (context, snapshot) {
         return RaisedButton(
-          child: Text('Submit!'),
+          child: Text('Login!'),
           onPressed: snapshot.hasData ? () async {
             isValid = await bloc.submitLogin();
            

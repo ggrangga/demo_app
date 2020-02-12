@@ -3,6 +3,8 @@ import '../dashboard/dashboard_page.dart';
 import '../home/widgets/drawer/home_drawer.dart';
 import '../search_screen.dart';
 import '../favorite_screen.dart';
+import '../setting_screen.dart';
+import '../movieDetail_screen.dart';
 
 enum HomePageOptions {
   dashboard,
@@ -33,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     DashboardPage(),
     SearchScreen(),
     FavoriteScreen(),
-    //SettingPage(),
+    SettingScreen(),
   ];
 
   final List<String> titles = [
@@ -44,6 +46,7 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void _onItemSelected(int index) {
+    print("index " + index.toString());
     setState(() {
       _selectedPageIndex = index;
     });
