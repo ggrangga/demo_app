@@ -28,7 +28,7 @@ class ImageDetailModel  {
       priority = parseJson['priority'],
       viewed = parseJson['viewed'],
       rating = parseJson['rating'],
-      timestamp = parseJson['timestamp'];
+      timestamp = parseJson['timestamp'] == 0 ? new DateTime.now().millisecondsSinceEpoch : parseJson['timestamp'];
 
   Map toJson() { 
     Map map = new Map();

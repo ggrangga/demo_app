@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
 import '../models/imageDetail_model.dart';
+import '../enum.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ImageList extends StatelessWidget {
   final List<ImageDetailModel> images;
+
+  Future<String> deleteFavorite(String id) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    Map<String, String> header = {'token': token, 'Content-Type': 'application/json'};
+
+    var response = await http.delete(
+      Enums.chfmsoli4qGetAll+id, 
+      headers: header
+    );
+    print(response.statusCode.toString() + " => " + response.reasonPhrase);
+    return response.statusCode.toString();
+  }
 
   ImageList(this.images);
   Widget build(context) {    
@@ -87,7 +105,7 @@ class ImageList extends StatelessWidget {
                                     tooltip: 'Remove',
                                     child: Icon(Icons.remove),
                                     onPressed: () {
-                                      print(images[index].title + " pressed");
+                                      deleteFavorite(images[index].id);
                                     },
                                   ),
                                 ),
