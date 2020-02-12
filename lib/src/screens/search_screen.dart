@@ -28,7 +28,6 @@ class AppState extends State<SearchScreen> {
       'apikey': token,
       ...map
     });
-    print("url =>" + uri.toString());
     var response = await http.get(uri);
     var rs = json.decode(response.body);
     if (rs['Response'] == "True") {
@@ -38,6 +37,7 @@ class AppState extends State<SearchScreen> {
       } else {
         myModels[0] = ImageModel.fromJson(rs);
       }
+      
       print("myModels => " + myModels.length.toString());
       if (mounted) {
         setState(() {
