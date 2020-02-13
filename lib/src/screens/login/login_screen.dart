@@ -14,10 +14,18 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> with ValidationMixin {
   bool isValid = true;
+  Bloc loginBloc;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    loginBloc = Provider.instance.loginBloc(true);
+  }
 
   @override
   Widget build(context) {
-    final bloc = Provider.of(context);
+   
     return new Scaffold(
       body: Container(
         margin: EdgeInsets.all(20.0),
@@ -28,10 +36,10 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
                 child: Column(
                   children: [
                     Container(margin: EdgeInsets.only(bottom: 200.0)),
-                    nameFIeld(bloc),
-                    loginFIeld(bloc),
+                    nameFIeld(loginBloc),
+                    loginFIeld(loginBloc),
                     Container(margin: EdgeInsets.only(bottom: 25.0)),
-                    submitButton(bloc),
+                    submitButton(loginBloc),
                   ],
                 ),
               ),
@@ -95,5 +103,10 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
         );
       },
     );
+  }
+
+  @override void dispose() {
+    loginBloc.dispose();
+    super.dispose();
   }
 }
