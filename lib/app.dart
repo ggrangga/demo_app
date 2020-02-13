@@ -1,6 +1,5 @@
 import 'package:demo_app/common/routes/router.dart';
 import 'package:demo_app/presentation/pages/splash/splash_page.dart';
-import 'package:demo_app/presentation/pages/login/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +12,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp (
       title: 'Omdb App',
-      routes: Router.routes,
-      home: LoginScreen(),
-      //onGenerateRoute: Router.onGenerateRoute,
+      home: SplashPage(),
+      onGenerateRoute: Router.onGenerateRoute,
     );
   }
 }
