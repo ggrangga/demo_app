@@ -15,20 +15,23 @@ class DashboardPage extends StatefulWidget {
 }
 class AppState extends State<DashboardPage> {
   List<ImageDetailModel> images = [];
+  bool isRecomended;
 
   void fetchImage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    bool this_isRecomended = prefs.getString('isRecomended') == null ? false : prefs.getString('isRecomended') == "true";
+    if(this_isRecomended){
+      List<ImageDetailModel> myModels = new List.from(
+        await getFromUrl(token, Enums.chfmsoli4qGetRecomended, true))
+        ..addAll(await getFromUrl(token, Enums.chfmsoli4qGetAll, false));
 
-    List<ImageDetailModel> myModels = new List.from(
-      await getFromUrl(token, Enums.chfmsoli4qGetRecomended, true))
-      ..addAll(await getFromUrl(token, Enums.chfmsoli4qGetAll, false));
-
-    print("myModels getAll => " + myModels.length.toString());
-    if (mounted && myModels.length > 0) {
-      setState(() {
-        images = myModels;
-      });
+      print("myModels getAll => " + myModels.length.toString());
+      if (mounted && myModels.length > 0) {
+        setState(() {
+          images = myModels;
+        });
+      }
     }
   }
 
@@ -36,13 +39,10 @@ class AppState extends State<DashboardPage> {
     List<ImageDetailModel> myModels = [];
     var response = await http.get(url, headers: {'token': token});
     var rs = json.decode(response.body);
-    print("response.statusCode => " + response.statusCode.toString());
-    print("url => " + url);
-    print("rs => " + rs.toString());
     if (response.statusCode == 200) {
       if (rs != null) {
         if(isRecomended == false)
-          myModels = (rs).map((i) => ImageDetailModel.fromJson(i)).toList();
+          myModels = (rs as List).map((i) => ImageDetailModel.fromJson(i)).toList();
         else
           myModels.add(ImageDetailModel.fromJson(rs));
       }      
