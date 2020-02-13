@@ -46,7 +46,7 @@ class AppState extends State<FavoriteScreen> {
     return new Container(
       child: Column(
         children: <Widget>[
-          ImageList(images),
+          ImageList(images, true),
         ],
       ),
     );

@@ -3,10 +3,10 @@ import '../models/imageDetail_model.dart';
 import '../enum.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class ImageList extends StatelessWidget {
   final List<ImageDetailModel> images;
+  final bool isRecommended;
 
   Future<String> deleteFavorite(String id) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -22,7 +22,7 @@ class ImageList extends StatelessWidget {
     return response.statusCode.toString();
   }
 
-  ImageList(this.images);
+  ImageList(this.images, this.isRecommended);
   Widget build(context) {    
     return new Expanded (
       child: ListView.builder(
@@ -96,20 +96,22 @@ class ImageList extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  width: 30.0,
-                                  height: 30.0,
-                                  child: FloatingActionButton(
-                                    tooltip: 'Remove',
-                                    child: Icon(Icons.remove),
-                                    onPressed: () {
-                                      deleteFavorite(images[index].id);
-                                    },
+                              isRecommended ?
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Container(
+                                    width: 30.0,
+                                    height: 30.0,
+                                    child: FloatingActionButton(
+                                      tooltip: 'Remove',
+                                      child: Icon(Icons.remove),
+                                      onPressed: () {
+                                        deleteFavorite(images[index].id);
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ), 
+                                )
+                              : new Container()
                             ],
                           ),
                         ),
