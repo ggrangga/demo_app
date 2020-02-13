@@ -1,26 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:demo_app/common/models/imageDetail_model.dart';
-import 'package:demo_app/common/enum/enum.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:demo_app/domain/favorite/entities/imageDetail_model.dart';
+import 'package:demo_app/common/config/injector.dart';
+import 'package:demo_app/data/favorite_movie/datasources/favorite_remote_datasource.dart';
 
 class ImageList extends StatelessWidget {
   final List<ImageDetailModel> images;
   final bool isRecommended;
-
-  Future<String> deleteFavorite(String id) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-
-    Map<String, String> header = {'token': token, 'Content-Type': 'application/json'};
-
-    var response = await http.delete(
-      Enums.chfmsoli4qGetAll+id, 
-      headers: header
-    );
-    print(response.statusCode.toString() + " => " + response.reasonPhrase);
-    return response.statusCode.toString();
-  }
+  final FavoriteMovieRemoteDatasource omdbRDS = getIt<FavoriteMovieRemoteDatasource>();
 
   ImageList(this.images, this.isRecommended);
   Widget build(context) {    
@@ -105,8 +91,8 @@ class ImageList extends StatelessWidget {
                                     child: FloatingActionButton(
                                       tooltip: 'Remove',
                                       child: Icon(Icons.remove),
-                                      onPressed: () {
-                                        deleteFavorite(images[index].id);
+                                      onPressed: () async {
+                                        await omdbRDS.deleteFavorite(images[index].id);
                                       },
                                     ),
                                   ),

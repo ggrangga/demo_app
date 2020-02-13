@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:demo_app/common/models/imageDetail_model.dart';
+import 'package:demo_app/domain/favorite/entities/imageDetail_model.dart';
 import 'package:demo_app/presentation/widget/imageDetail_list.dart';
-import 'package:demo_app/common/enum/enum.dart';
+import 'package:demo_app/common/config/injector.dart';
+import 'package:demo_app/data/favorite_movie/datasources/favorite_remote_datasource.dart';
 
 class FavoriteScreen extends StatefulWidget {
   FavoriteScreen({Key key}) : super(key: key);
@@ -15,25 +13,14 @@ class FavoriteScreen extends StatefulWidget {
 
 class AppState extends State<FavoriteScreen> {
   List<ImageDetailModel> images = [];
+  final FavoriteMovieRemoteDatasource omdbRDS = getIt<FavoriteMovieRemoteDatasource>();
 
   void fetchImageFavoriteAll() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-
-    var response = await http.get(Enums.chfmsoli4qGetAll, headers: {'token': token});
-    var rs = json.decode(response.body);
-    if (response.statusCode == 200) {
-      List<ImageDetailModel> myModels = [];
-      if (rs != null) {
-        myModels = (rs as List).map((i) => ImageDetailModel.fromJson(i)).toList();
-      }
-      print("myModels getAll => " + myModels.length.toString());
-      
-      if (mounted && myModels.length > 0) {
-        setState(() {
-          images = myModels;
-        });
-      }
+    List<ImageDetailModel> myModels = await omdbRDS.fetchImageForFavorite();
+    if (mounted && myModels.length > 0) {
+      setState(() {
+        images = myModels;
+      });
     }
   }
 

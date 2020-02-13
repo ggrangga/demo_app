@@ -45,7 +45,6 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void _onItemSelected(int index) {
-    print("index " + index.toString());
     setState(() {
       _selectedPageIndex = index;
     });

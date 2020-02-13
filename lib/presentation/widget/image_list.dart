@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:demo_app/common/models/image_model.dart';
+import 'package:demo_app/domain/omdb/entities/image_model.dart';
 import 'package:demo_app/presentation/pages/home/search/movieDetail_screen.dart';
 
 typedef OnImageListTappedCallback = Function(String);

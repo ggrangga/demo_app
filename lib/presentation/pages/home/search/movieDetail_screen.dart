@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:demo_app/common/models/image_model.dart';
-import 'package:demo_app/common/enum/enum.dart';
+import 'package:demo_app/domain/omdb/entities/image_model.dart';
+import 'package:demo_app/common/config/injector.dart';
+import 'package:demo_app/data/favorite_movie/datasources/favorite_remote_datasource.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   final ImageModel imageModel;
@@ -20,6 +18,8 @@ class AppState extends State<MovieDetailScreen> {
   TextEditingController _priority = new TextEditingController();
   TextEditingController _rating = new TextEditingController();
   String _radioValue1;
+
+  final FavoriteMovieRemoteDatasource omdbRDS = getIt<FavoriteMovieRemoteDatasource>();
   
   void initState() {
     super.initState();
@@ -30,36 +30,6 @@ class AppState extends State<MovieDetailScreen> {
       _priority.text = "1";
       _rating.text = "7";
     });
-    
-    print("thisImageModel => " + thisImageModel.toJson().toString());
-  }
-
-  Future<String> addFavorite() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-
-    Map<String, dynamic> map = new Map<String, dynamic>();
-    print("send => " + _radioValue1);
-    map["id"] = thisImageModel.imdbID;
-    map["timestamp"] = new DateTime.now().millisecondsSinceEpoch;
-    map["title"] = thisImageModel.title;
-    map["year"] = thisImageModel.year;
-    map["poster"] = thisImageModel.poster;
-    map["label"] = _label.text;
-    map["priority"] = int.parse(_priority.text);
-    map["viewed"] = _radioValue1 == "Yes";
-    map["rating"] = int.parse(_rating.text);
-    print("send => " + map.toString());
-
-    Map<String, String> header = {'token': token, 'Content-Type': 'application/json'};
-
-    var response = await http.post(
-      Enums.chfmsoli4qGetAll, 
-      headers: header, 
-      body: json.encode(map)
-    );
-    print(response.statusCode.toString() + " => " + response.reasonPhrase);
-    return response.statusCode.toString();
   }
 
   void radioButtonChanges(String value) {
@@ -189,7 +159,7 @@ class AppState extends State<MovieDetailScreen> {
                   child: RaisedButton(
                     child: Text('Submit!'),
                     onPressed:() async{
-                      var str = await addFavorite();
+                      var str = await omdbRDS.addFavorite(thisImageModel, _label.text, _priority.text, _radioValue1, _rating.text);
                       str =="200" ? Navigator.pop(context) : null;
                     },
                   )
