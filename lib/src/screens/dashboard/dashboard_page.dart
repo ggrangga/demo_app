@@ -15,7 +15,6 @@ class DashboardPage extends StatefulWidget {
 }
 class AppState extends State<DashboardPage> {
   List<ImageDetailModel> images = [];
-  bool isRecomended;
 
   void fetchImage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -59,7 +58,7 @@ class AppState extends State<DashboardPage> {
     return new Container(
       child: Column(
         children: <Widget>[
-          ImageList(images),
+          ImageList(images, false),
         ],
       ),
     );
