@@ -1,23 +1,11 @@
+import 'package:demo_app/common/config/injector.dart';
+// import 'package:demo_app/presentation/pages/splash/splash_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'src/screens/login/login_screen.dart';
+import 'app.dart' as app;
 
-import 'src/router.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return  MaterialApp(
-        title: 'Home Navigation',
-        routes: Router.routes,
-        //onGenerateRoute: Router.onGenerateRoute,
-        //onUnknownRoute: Router.onUnknownRoute,
-        home: LoginScreen(),
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          accentColor: Colors.deepPurple,
-        ),
-    );
-  }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupInjections();
+  app.main();
 }
