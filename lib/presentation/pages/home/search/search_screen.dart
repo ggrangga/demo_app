@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import '../models/image_model.dart';
-import '../widget/image_list.dart';
-import '../enum.dart';
+import 'package:demo_app/presentation/widget/image_list.dart';
+
+import 'package:demo_app/common/config/injector.dart';
+import 'package:demo_app/data/omdb_movie/datasources/omdb_remote_datasource.dart';
+import 'package:demo_app/domain/omdb/entities/image_model.dart';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key key}) : super(key: key);
@@ -17,39 +16,15 @@ class AppState extends State<SearchScreen> {
   int counter = 0;
   List<ImageModel> images = [];
   bool typing = false;
+  String _movieName;
 
-  void fetchImageSearch(String str) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-
-    var map = new Map<String, dynamic>();
-    str.substring(1).split("&").toList().forEach((value) => map[value.split("=")[0]] = value.split("=")[1]); 
-    Uri uri = Uri.http(Enums.omdbapi, '', {
-      'apikey': token,
-      ...map
-    });
-    var response = await http.get(uri);
-    var rs = json.decode(response.body);
-    if (rs['Response'] == "True") {
-      List<ImageModel> myModels = [];
-      if (rs['Search'] != null) {
-        myModels = (rs['Search'] as List).map((i) => ImageModel.fromJson(i)).toList();
-      } else {
-        myModels[0] = ImageModel.fromJson(rs);
-      }
-      
-      print("myModels => " + myModels.length.toString());
-      if (mounted) {
-        setState(() {
-          images = myModels;
-        });
-      }
-    }
-  }
+  final OmdbRemoteDatasource omdbRDS = getIt<OmdbRemoteDatasource>();
 
   void initState() {
     super.initState();
-    fetchImageSearch("&s=dark&y=2019");
+    setState(() {
+      _movieName = "&s=dark&y=2019";
+    });
   }
 
   Widget build(context) {
@@ -58,10 +33,27 @@ class AppState extends State<SearchScreen> {
         children: <Widget>[
           SearchBoxPage(
             onSearchTappedCallback: (String movieName) {
-              fetchImageSearch(movieName);
+              setState(() {
+                _movieName = movieName;
+              });
             },
           ),
-          ImageList(images),
+          Container(
+            child: FutureBuilder<List<ImageModel>>(
+              initialData: images,
+              future: omdbRDS.fetchSearch(_movieName),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.none)
+                  return AlertDialog(title: Text('Network Error'));
+                if (snapshot.hasData)
+                  return ImageList(snapshot.data);
+                else if (snapshot.error != null)
+                  return ListTile(title: Text('Search Error'));
+                else
+                  return Center(child: CircularProgressIndicator());
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -81,7 +73,7 @@ typedef OnSearchTappedCallback = Function(String);
 class SearchBoxState extends State<SearchBoxPage> {
   String textfieldOnlyTitleValue = '';
   String textfieldTitleValue = '';
-  String dropdownYearValue = '2020';
+  String _dropdownYearValue = '2020';
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +139,7 @@ class SearchBoxState extends State<SearchBoxPage> {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: DropdownButton<String>(
-                                value: dropdownYearValue,
+                                value: _dropdownYearValue.toString(),
                                 items: <String>['2017', '2018', '2019', '2020'].map((String value) {
                                   return new DropdownMenuItem<String>(
                                     value: value,
@@ -155,8 +147,7 @@ class SearchBoxState extends State<SearchBoxPage> {
                                   );
                                 }).toList(),
                                 onChanged: (value) {
-                                  print("dropdownYearValue " + value);
-                                  setState(() => (dropdownYearValue = value));
+                                  setState(() => (_dropdownYearValue = value));
                                 },
                               ),
                             ),
@@ -169,8 +160,8 @@ class SearchBoxState extends State<SearchBoxPage> {
                                   if (textfieldTitleValue.length > 0) 
                                     r += "&s=$textfieldTitleValue";
                                   
-                                  if (dropdownYearValue.length > 0) 
-                                    r += "&y=$dropdownYearValue";
+                                  if (_dropdownYearValue.length > 0) 
+                                    r += "&y=$_dropdownYearValue";
                                   
 
                                   if (r.length > 0) {

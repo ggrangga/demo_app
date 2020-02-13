@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import '../routes.dart';
+import 'package:demo_app/common/routes/routes.dart';
 
 class SettingScreen extends StatefulWidget {
   SettingScreen({Key key}) : super(key: key);

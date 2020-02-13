@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/image_model.dart';
-import '../screens/movieDetail_screen.dart';
+import 'package:demo_app/domain/omdb/entities/image_model.dart';
+import 'package:demo_app/presentation/pages/home/search/movieDetail_screen.dart';
 
 typedef OnImageListTappedCallback = Function(String);
 class ImageList extends StatelessWidget {

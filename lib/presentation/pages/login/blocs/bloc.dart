@@ -3,7 +3,7 @@ import 'package:rxdart/rxdart.dart';
 import 'validators.dart';
 import 'package:http/http.dart' show get;
 import 'dart:convert';
-import '../../src/enum.dart';
+import 'package:demo_app/common/network/enum.dart';
 
 class Bloc extends Object with Validators{
 //class Bloc{
