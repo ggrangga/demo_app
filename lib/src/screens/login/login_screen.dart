@@ -21,17 +21,23 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
     return new Scaffold(
       body: Container(
         margin: EdgeInsets.all(20.0),
-        child: Form(
+        child: SingleChildScrollView(  
           child: Column(
-            children: [
-              Container(margin: EdgeInsets.only(bottom: 125.0)),
-              nameFIeld(bloc),
-              loginFIeld(bloc),
-              Container(margin: EdgeInsets.only(bottom: 25.0)),
-              submitButton(bloc),
-            ],
-          ),
-        ),
+            children: <Widget>[
+              Form(
+                child: Column(
+                  children: [
+                    Container(margin: EdgeInsets.only(bottom: 200.0)),
+                    nameFIeld(bloc),
+                    loginFIeld(bloc),
+                    Container(margin: EdgeInsets.only(bottom: 25.0)),
+                    submitButton(bloc),
+                  ],
+                ),
+              ),
+            ]
+          )
+        )
       )
     );
   }
@@ -70,7 +76,7 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
       stream: bloc.submitValid,
       builder: (context, snapshot) {
         return RaisedButton(
-          child: Text('Submit!'),
+          child: Text('Login!'),
           onPressed: snapshot.hasData ? () async {
             isValid = await bloc.submitLogin();
            

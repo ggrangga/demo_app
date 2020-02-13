@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/image_model.dart';
+import '../screens/movieDetail_screen.dart';
 
+typedef OnImageListTappedCallback = Function(String);
 class ImageList extends StatelessWidget {
   final List<ImageModel> images;
 
@@ -32,10 +34,11 @@ class ImageList extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: FloatingActionButton(
+                      heroTag: index,
                       tooltip: 'Add',
                       child: Icon(Icons.add),
                       onPressed: () {
-                        print(images[index].title + " pressed");
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetailScreen(imageModel: images[index])));
                       },
                     ),
                   ),                

@@ -9,7 +9,7 @@ class ImageModel {
   ImageModel.fromJson(Map<String, dynamic> parseJson)
     : title = parseJson['Title'],
       year = parseJson['Year'],
-      imdbID = parseJson['ImdbID'],
+      imdbID = parseJson['imdbID'],
       type = parseJson['Type'],
       poster = parseJson['Poster'];
   Map<String, dynamic> toJson() => {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' show get;
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/image_model.dart';
@@ -24,12 +24,11 @@ class AppState extends State<SearchScreen> {
 
     var map = new Map<String, dynamic>();
     str.substring(1).split("&").toList().forEach((value) => map[value.split("=")[0]] = value.split("=")[1]); 
-    Uri uri = Uri.http(Enums.omdbapi, '/', {
+    Uri uri = Uri.http(Enums.omdbapi, '', {
       'apikey': token,
       ...map
     });
-    print("url =>" + uri.toString());
-    var response = await get(uri);
+    var response = await http.get(uri);
     var rs = json.decode(response.body);
     if (rs['Response'] == "True") {
       List<ImageModel> myModels = [];
@@ -38,6 +37,7 @@ class AppState extends State<SearchScreen> {
       } else {
         myModels[0] = ImageModel.fromJson(rs);
       }
+      
       print("myModels => " + myModels.length.toString());
       if (mounted) {
         setState(() {
@@ -51,15 +51,6 @@ class AppState extends State<SearchScreen> {
     super.initState();
     fetchImageSearch("&s=dark&y=2019");
   }
-
-  /*String Function() getDataFromSharedPref() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    setState(() {
-      token = token;
-    });
-    return token;
-  }*/
 
   Widget build(context) {
     return new Container(

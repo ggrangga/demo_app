@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
 import '../models/imageDetail_model.dart';
+import '../enum.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ImageList extends StatelessWidget {
   final List<ImageDetailModel> images;
+
+  Future<String> deleteFavorite(String id) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    Map<String, String> header = {'token': token, 'Content-Type': 'application/json'};
+
+    var response = await http.delete(
+      Enums.chfmsoli4qGetAll+id, 
+      headers: header
+    );
+    print(response.statusCode.toString() + " => " + response.reasonPhrase);
+    return response.statusCode.toString();
+  }
 
   ImageList(this.images);
   Widget build(context) {    
@@ -61,16 +79,6 @@ class ImageList extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              /*new Container(
-                                margin: const EdgeInsets.only(right: 10.0),
-                                child: new Text(images[index].title,
-                                  style: new TextStyle(
-                                    fontSize: 16.0,
-                                  ),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),*/
                               new Container(
                                 margin: const EdgeInsets.only(top: 10.0),
                                 child: new Row(
@@ -97,7 +105,7 @@ class ImageList extends StatelessWidget {
                                     tooltip: 'Remove',
                                     child: Icon(Icons.remove),
                                     onPressed: () {
-                                      print(images[index].title + " pressed");
+                                      deleteFavorite(images[index].id);
                                     },
                                   ),
                                 ),
@@ -106,122 +114,10 @@ class ImageList extends StatelessWidget {
                           ),
                         ),
                       ],
-                      /*children: <Widget>[
-                        Container(
-                          width: 200.0,
-                          height: 200.0,
-                          child: Image.network(images[index].poster),
-                        ),
-                        Container(
-                          width: 200.0,
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Title : ',
-                                      style: TextStyle(
-                                        fontSize: 14, 
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                    Text(
-                                      images[index].title + " (" + images[index].year + ")",
-                                      style: TextStyle(
-                                        fontSize: 14, 
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                    )
-                                  ]
-                                ),
-                              ),
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Priority : ',
-                                      style: TextStyle(
-                                        fontSize: 14, 
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                    Text(
-                                      images[index].priority.toString(),
-                                      style: TextStyle(
-                                        fontSize: 14, 
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    )
-                                  ]
-                                ),
-                              ),
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Rating : ',
-                                      style: TextStyle(
-                                        fontSize: 14, 
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                    Text(
-                                      images[index].rating.toString(),
-                                      style: TextStyle(
-                                        fontSize: 14, 
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    )
-                                  ]
-                                ),
-                              ),
-                            ]
-                          )
-                        ),                                                
-                      ],*/
                     ),
                   ),
                 ],
               ),
-              /*child: Row(
-                children: <Widget>[
-                  Container(
-                    width: 200.0,
-                    height: 200.0,
-                    child: Image.network(images[index].poster),
-                  ),
-                  new Flexible(
-                    child: new Container(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            images[index].title + " (" + images[index].year + ")",
-                            style: TextStyle(
-                              fontSize: 14, 
-                              fontWeight: FontWeight.bold
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          )
-                        ]
-                      )
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: FloatingActionButton(
-                      tooltip: 'Remove',
-                      child: Icon(Icons.remove),
-                      onPressed: () {
-                        print(images[index].title + " pressed");
-                      },
-                    ),
-                  ),  
-                ],
-              ),*/
             ); 
           }
         }
