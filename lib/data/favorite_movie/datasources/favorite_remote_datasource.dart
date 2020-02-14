@@ -79,12 +79,8 @@ class FavoriteMovieRemoteDatasourceImpl
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     bool this_isRecomended = prefs.getString('isRecomended') == null ? false : prefs.getString('isRecomended') == "true";
-    if(this_isRecomended){
-      List<ImageDetailModel> myModels = new List.from(await getFromUrl(token, Enums.chfmsoli4qGetAll, false));
-
-      return myModels;
-    }
-    return [];
+    List<ImageDetailModel> myModels = new List.from(await getFromUrl(token, Enums.chfmsoli4qGetAll, false));
+    return myModels;
   }
 
   Future<List<ImageDetailModel>> getFromUrl(var token, var url, var isRecomended) async{
