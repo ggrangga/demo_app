@@ -78,7 +78,6 @@ class FavoriteMovieRemoteDatasourceImpl
   Future<List<ImageDetailModel>> fetchImageForFavorite() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    bool this_isRecomended = prefs.getString('isRecomended') == null ? false : prefs.getString('isRecomended') == "true";
     List<ImageDetailModel> myModels = new List.from(await getFromUrl(token, Enums.chfmsoli4qGetAll, false));
     return myModels;
   }
