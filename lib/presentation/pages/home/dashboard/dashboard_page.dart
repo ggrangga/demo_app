@@ -34,7 +34,7 @@ class AppState extends State<DashboardPage> {
     return new Container(
       child: Column(
         children: <Widget>[
-          ImageList(images, false),
+          ImageList(images, false, (String s) => s),
         ],
       ),
     );

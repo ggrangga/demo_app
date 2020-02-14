@@ -3,12 +3,14 @@ import 'package:demo_app/domain/favorite/entities/imageDetail_model.dart';
 import 'package:demo_app/common/config/injector.dart';
 import 'package:demo_app/data/favorite_movie/datasources/favorite_remote_datasource.dart';
 
+typedef OnImageListTappedCallback = Function(String);
 class ImageList extends StatelessWidget {
   final List<ImageDetailModel> images;
   final bool isRecommended;
   final FavoriteMovieRemoteDatasource omdbRDS = getIt<FavoriteMovieRemoteDatasource>();
+  final OnImageListTappedCallback onImageListTappedCallback;
 
-  ImageList(this.images, this.isRecommended);
+  ImageList(this.images, this.isRecommended, this.onImageListTappedCallback);
   Widget build(context) {    
     return new Expanded (
       child: ListView.builder(
@@ -92,7 +94,8 @@ class ImageList extends StatelessWidget {
                                       tooltip: 'Remove',
                                       child: Icon(Icons.remove),
                                       onPressed: () async {
-                                        await omdbRDS.deleteFavorite(images[index].id);
+                                        var str = await omdbRDS.deleteFavorite(images[index].id);
+                                        onImageListTappedCallback(str);
                                       },
                                     ),
                                   ),

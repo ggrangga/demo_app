@@ -33,7 +33,7 @@ class AppState extends State<FavoriteScreen> {
     return new Container(
       child: Column(
         children: <Widget>[
-          ImageList(images, true),
+          ImageList(images, true, (String s) => fetchImageFavoriteAll()),
         ],
       ),
     );
